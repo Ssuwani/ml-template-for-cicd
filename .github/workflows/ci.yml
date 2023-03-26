@@ -14,15 +14,6 @@ jobs:
       - name: Get envs with .env file
         id: dotenv
         uses: falti/dotenv-action@v1.0.4
-        with:
-          path: .env
-
-      - name: echo dotenv outputs
-        run: |
-          echo ${{ steps.dotenv.outputs }}
-          echo ${{ steps.dotenv.outputs.EMAIL }}
-          echo ${{ steps.dotenv.outputs.MODEL_NAME }}
-          echo ${{ steps.dotenv.outputs.model_name }}
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{github.actor}}  --password-stdin
@@ -32,7 +23,9 @@ jobs:
           docker build \
           -t ghcr.io/${{ steps.dotenv.outputs.username }}/${{ steps.dotenv.outputs.model_name }}-train:${SHORT_SHA} \
           -t ghcr.io/${{ steps.dotenv.outputs.username }}/${{ steps.dotenv.outputs.model_name }}-train:${{ steps.dotenv.outputs.VERSION }} \
+          -f ../Dockerfile
           .
+
         working-directory: src
       
       - name: Push with Docker
