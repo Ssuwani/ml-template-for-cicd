@@ -1,0 +1,45 @@
+name: CI
+
+on: push
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Get short SHA
+        run: echo "SHORT_SHA=`echo v${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
+      - name: dotenv
+        uses: falti/dotenv-action@v1.0.4
+        
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{github.actor}}  --password-stdin
+
+      - name: Build with docker
+        run: |
+          docker build \
+          -t ghcr.io/${{ steps.dotenv.outputs.USERNAME }}/${{ steps.dotenv.outputs.MODEL_NAME }}-train:${SHORT_SHA} \
+          -t ghcr.io/${{ steps.dotenv.outputs.USERNAME }}/${{ steps.dotenv.outputs.MODEL_NAME }}-train:${{ steps.dotenv.outputs.VERSION }} \
+          .
+        working-directory: src
+      
+      - name: Push with Docker
+        run: |
+          docker push ghcr.io/${{ steps.dotenv.outputs.USERNAME }}/${{ steps.dotenv.outputs.MODEL_NAME }}-train:${SHORT_SHA}
+          docker push ghcr.io/${{ steps.dotenv.outputs.USERNAME }}/${{ steps.dotenv.outputs.MODEL_NAME }}-train:${{ steps.dotenv.outputs.VERSION }}
+          
+      - name: Update Version with Hash
+        run: |
+          yq -i \
+          ".train.image.version = \"$SHORT_SHA\"" \
+          values.yaml
+          
+          git config --global user.name  ${{ steps.dotenv.outputs.USERNAME }}
+          git config --global user.email ${{ steps.dotenv.outputs.EMAIL }}
+          
+          git add values.yaml
+          git commit -m "set version=${SHORT_SHA} by Github Actions"
+          
+          git push -f origin main

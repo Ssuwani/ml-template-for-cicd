@@ -1,0 +1,13 @@
+train:
+  image:
+    repository: ""
+    pullPolicy: IfNotPresent
+    tag: ""
+  mlflow_tracking_uri: ""
+
+deploy:
+  image:
+    repository: ""
+    pullPolicy: Always
+    tag: ""
+  replicaCount: 1
