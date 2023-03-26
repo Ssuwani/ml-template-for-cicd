@@ -2,9 +2,8 @@ train:
   image:
     repository: ""
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: "vab51d18"
   mlflow_tracking_uri: ""
-
 deploy:
   image:
     repository: ""
