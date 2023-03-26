@@ -33,16 +33,16 @@ jobs:
           docker push ghcr.io/${{ steps.dotenv.outputs.USERNAME }}/${{ steps.dotenv.outputs.MODEL_NAME }}-train:${SHORT_SHA}
           docker push ghcr.io/${{ steps.dotenv.outputs.USERNAME }}/${{ steps.dotenv.outputs.MODEL_NAME }}-train:${{ steps.dotenv.outputs.VERSION }}
           
-      - name: Update Version with Hash
+      - name: Update tag with Hash
         run: |
           yq -i \
-          ".train.image.version = \"$SHORT_SHA\"" \
+          ".train.image.tag = \"$SHORT_SHA\"" \
           values.yaml
           
           git config --global user.name  ${{ steps.dotenv.outputs.USERNAME }}
           git config --global user.email ${{ steps.dotenv.outputs.EMAIL }}
           
           git add values.yaml
-          git commit -m "set version=${SHORT_SHA} by Github Actions"
+          git commit -m "set tag=${SHORT_SHA} by Github Actions"
           
           git push -f origin main
