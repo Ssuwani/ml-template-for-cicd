@@ -11,7 +11,8 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=`echo v${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
-      - name: dotenv
+      - name: Get envs with .env file
+        id: dotenv
         uses: falti/dotenv-action@v1.0.4
         with:
           path: .env
