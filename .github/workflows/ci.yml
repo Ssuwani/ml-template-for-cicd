@@ -23,7 +23,7 @@ jobs:
           docker build \
           -t ghcr.io/${{ steps.dotenv.outputs.username }}/${{ steps.dotenv.outputs.model_name }}-train:${SHORT_SHA} \
           -t ghcr.io/${{ steps.dotenv.outputs.username }}/${{ steps.dotenv.outputs.model_name }}-train:${{ steps.dotenv.outputs.VERSION }} \
-          -f ../Dockerfile
+          -f ../Dockerfile \ 
           .
 
         working-directory: src
