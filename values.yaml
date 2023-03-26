@@ -3,8 +3,8 @@ train:
     repository: ""
     pullPolicy: IfNotPresent
     tag: ""
+    version: vc76c763
   mlflow_tracking_uri: ""
-
 deploy:
   image:
     repository: ""
