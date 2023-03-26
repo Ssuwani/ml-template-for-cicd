@@ -17,7 +17,11 @@ jobs:
           path: .env
 
       - name: echo dotenv outputs
-        run: echo ${{ steps.dotenv.outputs }}
+        run: |
+          echo ${{ steps.dotenv.outputs }}
+          echo ${{ steps.dotenv.outputs.EMAIL }}
+          echo ${{ steps.dotenv.outputs.MODEL_NAME }}
+          echo ${{ steps.dotenv.outputs.model_name }}
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{github.actor}}  --password-stdin
