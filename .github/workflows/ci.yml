@@ -15,7 +15,10 @@ jobs:
         uses: falti/dotenv-action@v1.0.4
         with:
           path: .env
-        
+
+      - name: echo dotenv outputs
+        run: echo ${{ steps.dotenv.outputs }}
+
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{github.actor}}  --password-stdin
 
